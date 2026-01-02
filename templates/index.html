@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{lang_map.title}}</title>
+    <style>
+        body { font-family: "Segoe UI", monospace, Arial; background: linear-gradient(135deg,#0f172a,#1e293b); color:#e2e8f0; min-height:100vh; padding:20px;}
+        .container { max-width:1200px; margin:0 auto;}
+        .title { text-align:center;font-size:2rem;font-weight:700;margin-bottom:16px; }
+        .logo {text-align:center;margin-bottom:18px;}
+        .sys-info {text-align:center;margin-bottom:18px;}
+        .lang-btn {position:absolute;right:30px;top:24px;}
+        .card-box {display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;}
+        .card {background:rgba(30,41,59,0.55);border-radius:13px;padding:18px;}
+        .card-title{font-size:1.06rem;margin-bottom:10px;color:#38bdf8;border-bottom:1px solid #334155;padding-bottom:8px;}
+        .item{margin:6px 0;display:flex;justify-content:space-between;}
+        .progress{width:100%;height:8px;background:rgba(148,163,184,0.17);border-radius:6px;margin:8px 0;overflow:hidden;}
+        .progress-bar{height:100%;border-radius:6px;background:linear-gradient(90deg,#38bdf8,#818cf8);}
+        .spark{width:100%;height:36px;}
+        .meta {font-size:0.92rem;color:#94a3b8;margin-top:3px;}
+        .time-info {margin:10px 0;font-size:0.97em; color:#0ea5e9;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://img.example.com/logo.png" style="height:56px;" alt="LOGO">
+        </div>
+        <div class="lang-btn">
+          <a href="/setlang/zh">中文</a> | <a href="/setlang/en">EN</a>
+        </div>
+        <h1 class="title">{{lang_map.title}}</h1>
+        <div class="sys-info" id="sysinfo">
+            <span>{{lang_map.hostname}}: <span id="hostname">—</span></span> |
+            <span>{{lang_map.os}}: <span id="sysname">—</span></span> |
+            <span>{{lang_map.kernel}}: <span id="kernel">—</span></span> |
+            <span>{{lang_map.uptime}}: <span id="uptime">—</span></span> |
+            <span>{{lang_map.ip}}: <span id="ip">—</span></span>
+        </div>
+        <div class="time-info">
+            <span>{{lang_map.china_time}}: <span id="china-time"></span></span> |
+            <span>{{lang_map.utc_time}}: <span id="utc-time"></span></span> |
+            <span>{{lang_map.local_time}}: <span id="local-time"></span></span>
+        </div>
+        <div class="card-box">
+            <!-- CPU -->
+            <div class="card">
+                <h2 class="card-title">{{lang_map.cpu}}</h2>
+                <div class="item"><span>{{lang_map.core}}</span><span id="cpu-core">—</span></div>
+                <div class="item"><span>{{lang_map.percent}}</span><span id="cpu-percent">—</span></div>
+                <div class="progress"><div class="progress-bar" id="cpu-bar" style="width:0%"></div></div>
+                <canvas id="cpu-spark" class="spark"></canvas>
+                <div class="meta">{{lang_map.history}}</div>
+            </div>
+            <!-- MEM -->
+            <div class="card">
+                <h2 class="card-title">{{lang_map.mem}}</h2>
+                <div class="item"><span>{{lang_map.total}}</span><span id="mem-total">—</span></div>
+                <div class="item"><span>{{lang_map.used}}</span><span id="mem-used">—</span></div>
+                <div class="item"><span>{{lang_map.percent}}</span><span id="mem-percent">—</span></div>
+                <div class="progress"><div class="progress-bar" id="mem-bar" style="width:0%"></div></div>
+                <canvas id="mem-spark" class="spark"></canvas>
+                <div class="meta">{{lang_map.history}}</div>
+            </div>
+            <!-- DISK -->
+            <div class="card">
+                <h2 class="card-title">{{lang_map.disk}}</h2>
+                <div class="item"><span>{{lang_map.total}}</span><span id="disk-total">—</span></div>
+                <div class="item"><span>{{lang_map.used}}</span><span id="disk-used">—</span></div>
+                <div class="item"><span>{{lang_map.percent}}</span><span id="disk-percent">—</span></div>
+                <div class="progress"><div class="progress-bar" id="disk-bar" style="width:0%"></div></div>
+                <canvas id="disk-spark" class="spark"></canvas>
+                <div class="meta">{{lang_map.history}}</div>
+            </div>
+            <!-- NET -->
+            <div class="card">
+                <h2 class="card-title">{{lang_map.net}}</h2>
+                <div class="item"><span>{{lang_map.sent}}</span><span id="net-sent">—</span></div>
+                <div class="item"><span>{{lang_map.recv}}</span><span id="net-recv">—</span></div>
+                <div class="item"><span>{{lang_map.sent_rate}}</span><span id="net-sent-rate">—</span></div>
+                <div class="item"><span>{{lang_map.recv_rate}}</span><span id="net-recv-rate">—</span></div>
+                <canvas id="net-spark" class="spark"></canvas>
+                <div class="meta">MB &amp; MB/s</div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">{{lang_map.load}}</h2>
+                <div class="item"><span>{{lang_map.load1}}</span><span id="load-1min">—</span></div>
+                <div class="item"><span>{{lang_map.load5}}</span><span id="load-5min">—</span></div>
+                <div class="item"><span>{{lang_map.load15}}</span><span id="load-15min">—</span></div>
+                <div class="item"><span>{{lang_map.monitor_time}}</span><span id="monitor-time">—</span></div>
+                <div class="meta">{{lang_map.status}}: <span style="color:#10b981">{{lang_map.running}}</span></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const MAX_POINTS = 30;
+        const history = {cpu:[], mem:[], disk:[], netRate:[]};
+        function push(arr,v){arr.push(v); if(arr.length>MAX_POINTS) arr.shift();}
+        function drawSpark(id, arr, color='#38bdf8'){const c=document.getElementById(id);if(!c)return;const ctx=c.getContext('2d');const w=c.width=c.clientWidth,h=c.height=c.clientHeight;ctx.clearRect(0,0,w,h);if(arr.length===0)return;const maxV=Math.max(...arr)||1;ctx.beginPath();for(let i=0;i<arr.length;i++){const x=(i/(MAX_POINTS-1))*w;const y=h-(arr[i]/maxV)*h;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.lineWidth=2;ctx.strokeStyle=color;ctx.stroke();const grad=ctx.createLinearGradient(0,0,0,h);grad.addColorStop(0,color+'66');grad.addColorStop(1,'transparent');ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();ctx.fillStyle=grad;ctx.fill();}
+        function updateData(){fetch('/api/monitor').then(res=>res.json()).then(data=>{
+            document.getElementById('cpu-core').textContent=data.cpu.core;
+            document.getElementById('cpu-percent').textContent=data.cpu.percent+"%";
+            document.getElementById('cpu-bar').style.width=data.cpu.percent+"%";
+            push(history.cpu, data.cpu.percent);drawSpark("cpu-spark", history.cpu, "#38bdf8");
+            document.getElementById('mem-total').textContent=data.mem.total+"GB";
+            document.getElementById('mem-used').textContent=data.mem.used+"GB";
+            document.getElementById('mem-percent').textContent=data.mem.percent+"%";
+            document.getElementById('mem-bar').style.width=data.mem.percent+"%";
+            push(history.mem, data.mem.percent);drawSpark("mem-spark", history.mem, "#60a5fa");
+            document.getElementById('disk-total').textContent=data.disk.total+"GB";
+            document.getElementById('disk-used').textContent=data.disk.used+"GB";
+            document.getElementById('disk-percent').textContent=data.disk.percent+"%";
+            document.getElementById('disk-bar').style.width=data.disk.percent+"%";
+            push(history.disk, data.disk.percent);drawSpark('disk-spark',history.disk,"#a78bfa");
+            document.getElementById('net-sent').textContent=data.net.sent_mb+" MB";
+            document.getElementById('net-recv').textContent=data.net.recv_mb+" MB";
+            document.getElementById('net-sent-rate').textContent=data.net.sent_rate_mb_s+" MB/s";
+            document.getElementById('net-recv-rate').textContent=data.net.recv_rate_mb_s+" MB/s";
+            push(history.netRate, data.net.sent_rate_mb_s+data.net.recv_rate_mb_s);
+            drawSpark('net-spark',history.netRate,"#34d399");
+            document.getElementById('load-1min').textContent=data.load['1min'];
+            document.getElementById('load-5min').textContent=data.load['5min'];
+            document.getElementById('load-15min').textContent=data.load['15min'];
+            document.getElementById('monitor-time').textContent=data.time.china;
+            document.getElementById('uptime').textContent=data.uptime;
+            document.getElementById('hostname').textContent=data.hostname;
+            document.getElementById('sysname').textContent=data.sys_name;
+            document.getElementById('kernel').textContent=data.kernel;
+            document.getElementById('ip').textContent=data.net.ip||"—";
+            document.getElementById('china-time').textContent=data.time.china;
+            document.getElementById('utc-time').textContent=data.time.utc;
+            document.getElementById('local-time').textContent=data.time.local;
+        });}
+        window.onload=function(){updateData();setInterval(updateData,3000);}
+    </script>
+</body>
+</html>
