@@ -1,0 +1,18 @@
+ini
+[Unit]
+Description=Server Monitoring Panel (Gunicorn)
+After=network.target
+
+[Service]
+User=monitor
+Group=monitor
+WorkingDirectory=/opt/monitor
+EnvironmentFile=/opt/monitor/.env
+ExecStart=/opt/monitor/venv/bin/gunicorn --workers 2 --threads 2 --bind 127.0.0.1:5000 server_monitor:app
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+```
