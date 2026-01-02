@@ -1,3 +1,9 @@
+
+flask
+psutil
+gunicorn
+pytz
+requests
 # Flask框架
 Flask==2.3.3
 Flask-CORS==4.0.0
